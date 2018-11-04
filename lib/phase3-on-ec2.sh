@@ -1,3 +1,5 @@
+# supposed to be run interactively after chroot /mnt/gentoo /bin/bash
+
 env-update
 . /etc/profile
 cat /etc/portage/make.conf
@@ -12,4 +14,10 @@ END
 
 
 echo 'GENTOO_MIRRORS="http://mirror.netcologne.de/gentoo"' >> /etc/portage/make.conf
+
+
+emerge -a $EMERGE_OPTS --update --deep --newuse -a --with-bdeps=y @world
+emerge app-portage/gentoolkit
+emerge -a $EMERGE_OPTS --depclean
+emerge -av sys-kernel/gentoo-sources
 
