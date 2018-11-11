@@ -9,7 +9,15 @@ cd /root
 mv /etc/portage/make.conf /etc/portage/make.conf.bak
 cp /root/configs/make.conf /etc/portage
 
-emerge -a $EMERGE_OPTS --update --deep --newuse -a --with-bdeps=y @world
+echo -e "\nen_US ISO-8859-1\nen_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+eselect locale set en_US.utf8
+. /etc/profile
+
+# optional (long) emerge -av --exclude sys-devel/gcc @world
+# or
+# optional (suppose to be quick) emerge -a $EMERGE_OPTS --update --deep --newuse -a --with-bdeps=y @world
+
 emerge app-portage/gentoolkit
 emerge -a $EMERGE_OPTS --depclean
 emerge -av sys-kernel/gentoo-sources
@@ -24,18 +32,9 @@ echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
 emerge -av vim grub
 
-echo -e "\nen_US ISO-8859-1\nen_US.UTF-8 UTF-8" >> /etc/locale.gen
-locale-gen
-eselect locale set en_US.utf8
-. /etc/profile
-
 # some cleanup
 cd /
 rm portage-latest.tar.xz  stage3-amd64-*
-
-# optional
-# emerge -av --exclude sys-devel/gcc @world
-
 
 rc-update delete keymaps boot
 

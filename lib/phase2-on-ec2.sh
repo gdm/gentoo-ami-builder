@@ -35,10 +35,6 @@ PORTAGE_FILE="$(basename "$PORTAGE_URL")"
 wget "$PORTAGE_URL"
 tar xpf "$PORTAGE_FILE" -C usr --xattrs-include='*.*' --numeric-owner
 
-# supposed to be from Amazon AMI  with newer kernel - see https://aws.amazon.com/amazon-linux-ami/
-echo "Installing Amazon's kernel configuration..."
-mkdir -p /mnt/gentoo/etc/kernels
-cp -f /boot/config-* /mnt/gentoo/etc/kernels
 
 cat >> /mnt/gentoo/etc/fstab << END
 LABEL=root / ext4 noatime 0 1
