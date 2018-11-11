@@ -41,7 +41,7 @@ mkdir -p /mnt/gentoo/etc/kernels
 cp -f /boot/config-* /mnt/gentoo/etc/kernels
 
 cat >> /mnt/gentoo/etc/fstab << END
-LABEL=aux-root / ext4 noatime 0 1
+LABEL=root / ext4 noatime 0 1
 END
 
 echo "Copying network options..."
