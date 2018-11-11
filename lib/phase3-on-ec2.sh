@@ -25,12 +25,13 @@ emerge -av sys-kernel/gentoo-sources
 # install config
 cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
 cd /usr/src/linux
-make -j5
+make -j5 && make install && make modules_install
 
 # install packages
 echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
-emerge -av vim grub
+emerge -av vim grub cloud-init syslog-ng logrotate vixie-cron monit mailx chrony openssh
+rc-update add cloud-init boot
 
 # some cleanup
 cd /
@@ -41,8 +42,8 @@ rc-update delete keymaps boot
 emerge -av dhcpcd
 ln -s /etc/init.d/net.lo /etc/init.d/net.eth0
 rc-update add net.eth0 default
+
+ln -s /etc/init.d/net.lo /etc/init.d/net.ens5
 rc-update add net.ens5 default
-
-
 
 

@@ -1,15 +1,39 @@
+#!/bin/bash
+
+# todo: automate fdisk/parted
+mkfs.ext4 /dev/nvme2n1p1 -L root
+mkdir /mnt/gentoo2
+mount -o noatime /dev/nvme2n1p1 /mnt/gentoo2
 
 
-echo > /root/exclude-rsync.txt <<EOF
-/boot/*
+cat > /root/exclude-rsync.txt <<EOF
 /dev/*
 /proc/*
 /sys/*
 /usr/portage/*
+/usr/src/*
+/lost+found
 EOF
 
 rsync -avxHAX  --numeric-ids --info=progress2 --exclude-from=/root/exclude-rsync.txt /mnt/gentoo/ /mnt/gentoo2/
 
+ROOT=/mnt/gentoo2
+echo  "Mounting proc/sys/dev/pts..."
+mount -t proc none ${ROOT}/proc
+mount -o bind /sys ${ROOT}/sys
+mount -o bind /dev ${ROOT}/dev
+mount -o bind /dev/pts ${ROOT}/dev/pts
+
+
+# now perform grub installation
+chroot /mnt/gentoo2 /bin/bash -c ". /etc/profile; env-update; grub-install /dev/nvme2n1; grub-mkconfig -o /boot/grub/grub.cfg"
+sed -i -e 's/\/dev\/nvme2n1p1/\/dev\/nvme0n1p1/g' /mnt/gentoo2/boot/grub/grub.cfg
+
+umount ${ROOT}/dev/pts
+umount ${ROOT}/dev
+umount ${ROOT}/sys
+umount ${ROOT}/proc
+umount $ROOT
 
 exit 0 
 # now parted
