@@ -1,0 +1,14 @@
+1 get rid of 90 sec delay by kernel
+
+[    6.747165] udevd[1162]: starting eudev-3.2.5
+[    7.190274] ena 0000:00:05.0 enp0s5: renamed from eth0
+[    9.480893] EXT4-fs (nvme0n1p1): re-mounted. Opts: (null)
+[    9.521635] urandom_read: 5 callbacks suppressed
+[    9.521635] random: ln: uninitialized urandom read (6 bytes read)
+[    9.691067] random: mktemp: uninitialized urandom read (10 bytes read)
+[   93.443431] random: crng init done
+
+
+2. make sure AWS displays dmesg (limit speed tty)
+
+3. install cron to autostart

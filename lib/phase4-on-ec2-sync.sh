@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+# parted /dev/nvme2n1
+# mklabel msdos
+# mkpart primary ext4 1 100%
+# set 1 boot on
+
 # todo: automate fdisk/parted
 mkfs.ext4 /dev/nvme2n1p1 -L root
 mkdir /mnt/gentoo2
