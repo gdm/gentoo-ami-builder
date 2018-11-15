@@ -1,3 +1,5 @@
+0. disable selinux before reboot of host
+
 1 get rid of 90 sec delay by kernel
 
 [    6.747165] udevd[1162]: starting eudev-3.2.5
@@ -8,7 +10,19 @@
 [    9.691067] random: mktemp: uninitialized urandom read (10 bytes read)
 [   93.443431] random: crng init done
 
+try with rng-tools
+
+https://unix.stackexchange.com/questions/442698/when-i-log-in-it-hangs-until-crng-init-done
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=897572#82
+https://www.linuxquestions.org/questions/debian-26/debian-hangs-at-boot-with-random-crng-init-done-4175613405/
+
+https://forums.gentoo.org/viewtopic-t-1083804-start-0.html
+
 
 2. make sure AWS displays dmesg (limit speed tty)
 
 3. install cron to autostart
+
+
+hostname not persistent (installed by cloud-init)
+

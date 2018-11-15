@@ -36,8 +36,9 @@ make -j5 && make install && make modules_install
 # install packages
 echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
-emerge -av vim grub cloud-init syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux
-rc-update add cloud-init boot
+emerge -av vim grub cloud-init syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux rng-tools
+
+eselect editor set /usr/bin/vi
 
 # some cleanup
 cd /
@@ -64,4 +65,13 @@ rc-update add cloud-init default
 rc-update add cloud-config default
 rc-update add cloud-final default
 
+rc-update add vixie-cron
+rc-update add rngd boot
 
+cat <<HERE >> /etc/default/grub
+GRUB_TIMEOUT=1
+GRUB_DISABLE_SUBMENU=true
+GRUB_CMDLINE_LINUX="crashkernel=auto console=ttyS0,28800n8 console=tty0 net.ifnames=0"
+GRUB_DISABLE_RECOVERY=true
+GRUB_TERMINAL=console
+HERE
