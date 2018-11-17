@@ -10,7 +10,7 @@
 [    9.691067] random: mktemp: uninitialized urandom read (10 bytes read)
 [   93.443431] random: crng init done
 
-try with rng-tools
+try with rng-tools - didn't help
 
 https://unix.stackexchange.com/questions/442698/when-i-log-in-it-hangs-until-crng-init-done
 https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=897572#82
@@ -25,4 +25,19 @@ https://forums.gentoo.org/viewtopic-t-1083804-start-0.html
 
 
 hostname not persistent (installed by cloud-init)
+related issue: https://bugs.launchpad.net/cloud-init/+bug/1246485
+try  : /etc/hostname with cloud-init
+
+/etc/conf.d/hostname:
+hostname="# Set to the hostname of this machinegentoo"
+
+
+
+gentoo seed for urandom
+/var/lib/misc/random-seed
+how to setup with cloud-init: http://blog.dustinkirkland.com/2012/10/seed-devurandom-through-metadata-ec2.html
+also urandom should be configured to start after cloud-init-local
+
+
+log
 

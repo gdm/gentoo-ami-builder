@@ -26,19 +26,29 @@ cp /usr/share/zoneinfo/UTC /etc/localtime
 
 emerge app-portage/gentoolkit
 emerge -a $EMERGE_OPTS --depclean
-emerge -av sys-kernel/gentoo-sources
 
+# newer kernel
+echo "=sys-kernel/gentoo-sources-4.19.2 ~amd64" >>  /etc/portage/package.accept_keywords
+emerge -av =sys-kernel/gentoo-sources-4.19.2
+cp /root/configs/config-4.19.2.txt  /usr/src/linux/.config
+
+# standard kernel
 # install config
-cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
+# cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
+# emerge -av sys-kernel/gentoo-sources
+
 cd /usr/src/linux
 make -j5 && make install && make modules_install
 
 # install packages
-echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
+#echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
-emerge -av vim grub cloud-init syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux rng-tools
+emerge -av vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree
 
 eselect editor set /usr/bin/vi
+
+echo "=app-emulation/cloud-init-18.4 ~amd64" >> /etc/portage/package.accept_keywords
+emerge -av =app-emulation/cloud-init-18.4
 
 # some cleanup
 cd /
@@ -66,7 +76,7 @@ rc-update add cloud-config default
 rc-update add cloud-final default
 
 rc-update add vixie-cron
-rc-update add rngd boot
+rc-update add syslog-ng boot
 
 cat <<HERE >> /etc/default/grub
 GRUB_TIMEOUT=1
