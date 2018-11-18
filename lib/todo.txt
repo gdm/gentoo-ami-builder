@@ -21,10 +21,7 @@ https://forums.gentoo.org/viewtopic-t-1083804-start-0.html
 
 2. make sure AWS displays dmesg (limit speed tty)
 
-3. install cron to autostart
-
-
-hostname not persistent (installed by cloud-init)
+(in progress - test with new cloud-init) hostname not persistent (installed by cloud-init)
 related issue: https://bugs.launchpad.net/cloud-init/+bug/1246485
 try  : /etc/hostname with cloud-init
 
@@ -32,6 +29,9 @@ try  : /etc/hostname with cloud-init
 hostname="# Set to the hostname of this machinegentoo"
 
 
+
+
+(in progress - test with trust cpu code - new in 4.18 kernel)
 
 gentoo seed for urandom
 /var/lib/misc/random-seed

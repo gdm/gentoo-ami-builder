@@ -43,12 +43,22 @@ make -j5 && make install && make modules_install
 # install packages
 #echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
-emerge -av vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree
+emerge -av vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree pciutils
 
 eselect editor set /usr/bin/vi
 
-echo "=app-emulation/cloud-init-18.4 ~amd64" >> /etc/portage/package.accept_keywords
-emerge -av =app-emulation/cloud-init-18.4
+cat <<HERE >> /etc/portage/package.accept_keywords
+# for awscli
+=dev-python/s3transfer-0.1.13-r1 ~amd64
+=dev-python/awscli-1.15.10 ~amd64
+HERE
+
+# don't use this (new) version of cloud-init because it spoils /etc/locale.gen
+#echo "=app-emulation/cloud-init-18.4 ~amd64" >> /etc/portage/package.accept_keywords
+emerge -av app-emulation/cloud-init awscli
+
+# change startup script (to run before urandom)
+sed -i '/after localmount/a  \ \ before urandom' /etc/init.d/cloud-init-local
 
 # some cleanup
 cd /
@@ -81,7 +91,7 @@ rc-update add syslog-ng boot
 cat <<HERE >> /etc/default/grub
 GRUB_TIMEOUT=1
 GRUB_DISABLE_SUBMENU=true
-GRUB_CMDLINE_LINUX="crashkernel=auto console=ttyS0,28800n8 console=tty0 net.ifnames=0"
+GRUB_CMDLINE_LINUX="crashkernel=auto console=ttyS0,28800n8 console=tty0"
 GRUB_DISABLE_RECOVERY=true
 GRUB_TERMINAL=console
 HERE

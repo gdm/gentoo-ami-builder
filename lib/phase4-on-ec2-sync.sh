@@ -21,7 +21,12 @@ cat > /root/exclude-rsync.txt <<EOF
 /lost+found
 EOF
 
-rsync -avxHAX  --numeric-ids --info=progress2 --exclude-from=/root/exclude-rsync.txt /mnt/gentoo/ /mnt/gentoo2/
+# remove everything if any content exits (not sure that --delete from rsync works good enough )
+#if [ -d /mnt/gentoo2/boot ]; then
+#  rm -rf /mnt/gentoo2/*
+#fi
+
+rsync -avxHAX --delete --numeric-ids --info=progress2 --exclude-from=/root/exclude-rsync.txt /mnt/gentoo/ /mnt/gentoo2/
 
 ROOT=/mnt/gentoo2
 echo  "Mounting proc/sys/dev/pts..."
