@@ -39,5 +39,45 @@ how to setup with cloud-init: http://blog.dustinkirkland.com/2012/10/seed-devura
 also urandom should be configured to start after cloud-init-local
 
 
+mount and umount /dev/shm/ inside chroot gentoo (prevent rebuilding python36, probably something else)
+
 log
 
+
+docker complains about missing options for kernel
+
+ * Messages for package app-emulation/docker-18.03.1:
+
+ *   CONFIG_CGROUP_DEVICE:       is not set when it should be.
+ *   CONFIG_KEYS: is mandatory
+ *   CONFIG_VETH:        is not set when it should be.
+ *   CONFIG_BRIDGE:      is not set when it should be.
+ *   CONFIG_BRIDGE_NETFILTER:    is not set when it should be.
+ *   CONFIG_NETFILTER_XT_MATCH_IPVS:     is not set when it should be.
+ *   CONFIG_USER_NS:     is not set when it should be.
+ *   CONFIG_CGROUP_PIDS:         is not set when it should be.
+ *   CONFIG_MEMCG_SWAP: is required if you wish to limit swap usage of containers
+ *   CONFIG_MEMCG_SWAP_ENABLED:  is not set when it should be.
+ *   CONFIG_BLK_CGROUP: is optional for container statistics gathering
+ *   CONFIG_BLK_DEV_THROTTLING:  is not set when it should be.
+ *   CONFIG_CFQ_GROUP_IOSCHED:   is not set when it should be.
+ *   CONFIG_CGROUP_PERF: is optional for container statistics gathering
+ *   CONFIG_CGROUP_HUGETLB:      is not set when it should be.
+ *   CONFIG_NET_CLS_CGROUP:      is not set when it should be.
+ *   CONFIG_CFS_BANDWIDTH: is optional for container statistics gathering
+ *   CONFIG_RT_GROUP_SCHED:      is not set when it should be.
+ *   CONFIG_IP_VS:       is not set when it should be.
+ *   CONFIG_IP_VS_PROTO_TCP:     is not set when it should be.
+ *   CONFIG_IP_VS_PROTO_UDP:     is not set when it should be.
+ *   CONFIG_IP_VS_NFCT:  is not set when it should be.
+ *   CONFIG_IP_VS_RR:    is not set when it should be.
+ *   CONFIG_VXLAN:       is not set when it should be.
+ *   CONFIG_IPVLAN:      is not set when it should be.
+ *   CONFIG_MACVLAN:     is not set when it should be.
+ *   CONFIG_DUMMY:       is not set when it should be.
+ *   CONFIG_CGROUP_NET_PRIO:     is not set when it should be.
+ *   CONFIG_EXT4_FS_POSIX_ACL:   is not set when it should be.
+ *   CONFIG_EXT4_FS_SECURITY:    is not set when it should be.
+ *   CONFIG_EXT4_FS_SECURITY:    is not set when it should be.
+ *   CONFIG_EXT4_FS_POSIX_ACL:   is not set when it should be.
+ * Please check to make sure these options are set correctly.

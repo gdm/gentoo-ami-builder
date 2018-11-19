@@ -14,6 +14,8 @@ locale-gen
 eselect locale set en_US.utf8
 . /etc/profile
 
+eselect python set python2.7
+
 # set timezone
 echo "UTC" >  /etc/timezone
 cp /usr/share/zoneinfo/UTC /etc/localtime
@@ -55,7 +57,12 @@ HERE
 
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
 #echo "=app-emulation/cloud-init-18.4 ~amd64" >> /etc/portage/package.accept_keywords
-emerge -av app-emulation/cloud-init awscli
+emerge -av app-emulation/cloud-init awscli app-crypt/gnupg
+
+# when we want to setup docker (in case python 36 only is in use
+#echo "dev-vcs/git -python" >> /etc/portage/package.use/git.use
+echo "app-emulation/containerd -btrfs" >> /etc/portage/package.use/containerd.use
+# emerge -av app-emulation/docker (see todo.txt for resolving requirements in kernel)
 
 # change startup script (to run before urandom)
 sed -i '/after localmount/a  \ \ before urandom' /etc/init.d/cloud-init-local
@@ -95,3 +102,6 @@ GRUB_CMDLINE_LINUX="crashkernel=auto console=ttyS0,28800n8 console=tty0"
 GRUB_DISABLE_RECOVERY=true
 GRUB_TERMINAL=console
 HERE
+
+# for java
+echo "emerge -av oracle-jre-bin"

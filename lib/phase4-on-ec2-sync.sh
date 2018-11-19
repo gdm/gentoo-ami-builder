@@ -18,6 +18,7 @@ cat > /root/exclude-rsync.txt <<EOF
 /sys/*
 /usr/portage/*
 /usr/src/*
+/var/tmp/portage/*
 /lost+found
 EOF
 
