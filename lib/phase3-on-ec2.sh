@@ -4,40 +4,44 @@
 env-update
 . /etc/profile
 
-# install make.conf
-cd /root
-mv /etc/portage/make.conf /etc/portage/make.conf.bak
-cp /root/configs/make.conf /etc/portage
+KERNEL_VERSION=4.19.4
+function step1 () {
+  # install make.conf
+  cd /root
+  mv /etc/portage/make.conf /etc/portage/make.conf.bak
+  cp /root/configs/make.conf /etc/portage
 
-echo -e "\nen_US ISO-8859-1\nen_US.UTF-8 UTF-8" >> /etc/locale.gen
-locale-gen
-eselect locale set en_US.utf8
-. /etc/profile
+  echo -e "\nen_US ISO-8859-1\nen_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen
+  eselect locale set en_US.utf8
+  . /etc/profile
 
-eselect python set python2.7
+  eselect python set python2.7
 
-# set timezone
-echo "UTC" >  /etc/timezone
-cp /usr/share/zoneinfo/UTC /etc/localtime
+  # set timezone
+  echo "UTC" >  /etc/timezone
+  cp /usr/share/zoneinfo/UTC /etc/localtime
 
-# optional (long) emerge -av --exclude sys-devel/gcc @world
-# or
-# optional (suppose to be quick) emerge -a $EMERGE_OPTS --update --deep --newuse -a --with-bdeps=y @world
+  # optional (long) emerge -av --exclude sys-devel/gcc @world
+  # or
+  # optional (suppose to be quick) emerge -a $EMERGE_OPTS --update --deep --newuse -a --with-bdeps=y @world
 
-# todo(properly): emerge --unmerge nano
+  # todo(properly): emerge --unmerge nano
 
-emerge app-portage/gentoolkit
-emerge -a $EMERGE_OPTS --depclean
+  emerge app-portage/gentoolkit
+  emerge -a $EMERGE_OPTS --depclean
 
-# newer kernel
-echo "=sys-kernel/gentoo-sources-4.19.2 ~amd64" >>  /etc/portage/package.accept_keywords
-emerge -av =sys-kernel/gentoo-sources-4.19.2
-cp /root/configs/config-4.19.2.txt  /usr/src/linux/.config
+  # newer kernel
+  echo "=sys-kernel/gentoo-sources-${KERNEL_VERSION} ~amd64" >>  /etc/portage/package.accept_keywords
+  emerge -av =sys-kernel/gentoo-sources-${KERNEL_VERSION}
+  cp /root/configs/config-4.19.2.txt  /usr/src/linux/.config
 
-# standard kernel
-# install config
-# cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
-# emerge -av sys-kernel/gentoo-sources
+  # old standard kernel
+  # install config
+  # cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
+  # emerge -av sys-kernel/gentoo-sources
+}
+
 
 cd /usr/src/linux
 make -j5 && make install && make modules_install
