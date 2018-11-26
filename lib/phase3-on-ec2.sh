@@ -42,7 +42,7 @@ function step1 () {
   # emerge -av sys-kernel/gentoo-sources
 }
 
-
+step1
 cd /usr/src/linux
 make -j5 && make install && make modules_install
 
@@ -107,5 +107,15 @@ GRUB_DISABLE_RECOVERY=true
 GRUB_TERMINAL=console
 HERE
 
-# for java
+# for java (for experiments with hosting ?)
+echo ">=dev-java/oracle-jre-bin-1.8.0.192:1.8 Oracle-BCLA-JavaSE" >> /etc/portage/package.license
+echo "dev-java/oracle-jre-bin jce" >> /etc/portage/package.use/oracle-java.use
 echo "emerge -av oracle-jre-bin"
+# deliver binary
+emerge -av oracle-jre-bin
+
+# install mail clients (for experiments)
+echo "mail-client/neomutt idn lmdb gpg_classic qdbm sasl smime_classic" > /etc/portage/package.use/mutt.use
+echo "mail-filter/procmail mbox" >> /etc/portage/package.use/mutt.use
+emerge -av neomutt procmail fetchmail
+

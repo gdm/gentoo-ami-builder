@@ -49,4 +49,3 @@ mount -o bind /sys /mnt/gentoo/sys
 mount -o bind /dev /mnt/gentoo/dev
 mount -o bind /dev/pts /mnt/gentoo/dev/pts
 
-
