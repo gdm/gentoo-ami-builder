@@ -4,7 +4,7 @@
 env-update
 . /etc/profile
 
-KERNEL_VERSION=4.19.4
+KERNEL_VERSION=4.19.9
 function step1 () {
   # install make.conf
   cd /root
@@ -55,8 +55,11 @@ eselect editor set /usr/bin/vi
 
 cat <<HERE >> /etc/portage/package.accept_keywords
 # for awscli
-=dev-python/s3transfer-0.1.13-r1 ~amd64
-=dev-python/awscli-1.15.10 ~amd64
+#=dev-python/s3transfer-0.1.13-r1 ~amd64
+#=dev-python/awscli-1.16.72 ~amd64
+dev-python/s3transfer ~amd64
+dev-python/awscli ~amd64
+dev-java/openjdk-bin ~amd64
 HERE
 
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
@@ -77,7 +80,9 @@ rm portage-latest.tar.xz  stage3-amd64-*
 
 rc-update delete keymaps boot
 
-emerge -av dhcpcd
+emerge -av dhcpcd audit postgresql openjdk
+rc-update add auditd boot
+
 
 # no need if cloud-init exist
 # ln -s /etc/init.d/net.lo /etc/init.d/net.eth0
@@ -119,3 +124,26 @@ echo "mail-client/neomutt idn lmdb gpg_classic qdbm sasl smime_classic" > /etc/p
 echo "mail-filter/procmail mbox" >> /etc/portage/package.use/mutt.use
 emerge -av neomutt procmail fetchmail
 
+echo <<HERE
+about postgres:
+* If you need a global psqlrc-file, you can place it in:
+ *     /etc/postgresql-10/
+ * 
+ * Gentoo specific documentation:
+ * https://wiki.gentoo.org/wiki/PostgreSQL
+ * 
+ * Official documentation:
+ * https://www.postgresql.org/docs/10/static/index.html
+ * 
+ * The default location of the Unix-domain socket is:
+ *     /run/postgresql/
+ * 
+ * Before initializing the database, you may want to edit PG_INITDB_OPTS
+ * so that it contains your preferred locale in:
+ *     /etc/conf.d/postgresql-10
+ * 
+ * Then, execute the following command to setup the initial database
+ * environment:
+ *     emerge --config =dev-db/postgresql-10.6
+
+HERE
