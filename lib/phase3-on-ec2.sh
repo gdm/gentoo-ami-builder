@@ -91,6 +91,7 @@ rc-update add auditd boot
 # rc-update add net.ens5 default
 
 rc-update add sshd default
+rc-update add hostname default
 
 sed -i "s/^pool/#pool/" /etc/chrony/chrony.conf
 sed -i "3iserver 169.254.169.123 prefer iburst" /etc/chrony/chrony.conf
