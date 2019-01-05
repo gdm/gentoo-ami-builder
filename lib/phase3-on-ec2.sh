@@ -34,7 +34,7 @@ function step1 () {
   # newer kernel
   echo "=sys-kernel/gentoo-sources-${KERNEL_VERSION} ~amd64" >>  /etc/portage/package.accept_keywords
   emerge -av =sys-kernel/gentoo-sources-${KERNEL_VERSION}
-  cp /root/configs/config-4.19.2.txt  /usr/src/linux/.config
+  cp /root/configs/config-4.20.0.txt  /usr/src/linux/.config
 
   # old standard kernel
   # install config
@@ -80,7 +80,7 @@ rm portage-latest.tar.xz  stage3-amd64-*
 
 rc-update delete keymaps boot
 
-emerge -av dhcpcd audit postgresql openjdk
+emerge -av dhcpcd audit postgresql
 rc-update add auditd boot
 
 
@@ -122,8 +122,13 @@ emerge -av oracle-jre-bin
 
 # install mail clients (for experiments)
 echo "mail-client/neomutt idn lmdb gpg_classic qdbm sasl smime_classic" > /etc/portage/package.use/mutt.use
+echo "sys-fs/squashfs-tools -xz -debug lz4 lzma lzo -static -xattr" > /etc/portage/package.use/squashfs-tools.use
 echo "mail-filter/procmail mbox" >> /etc/portage/package.use/mutt.use
-emerge -av neomutt procmail fetchmail
+emerge -av neomutt procmail fetchmail squashfs-tools
+
+# make portage.sq
+cd /usr/portage
+mksquashfs  . /portage.sq -e distfiles -comp lz4
 
 echo <<HERE
 about postgres:
