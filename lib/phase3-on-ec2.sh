@@ -4,7 +4,7 @@
 env-update
 . /etc/profile
 
-KERNEL_VERSION=4.19.9
+KERNEL_VERSION=4.20.0
 function step1 () {
   # install make.conf
   cd /root
@@ -60,6 +60,10 @@ cat <<HERE >> /etc/portage/package.accept_keywords
 dev-python/s3transfer ~amd64
 dev-python/awscli ~amd64
 dev-java/openjdk-bin ~amd64
+# for docker we need latest perl
+dev-lang/perl ~amd64
+perl-core/* ~amd64
+virtual/perl-* ~amd64
 HERE
 
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
@@ -153,3 +157,11 @@ about postgres:
  *     emerge --config =dev-db/postgresql-10.6
 
 HERE
+
+# now rebuild
+
+# for rebuilding python 2.7
+chmod 1777 /dev/shm
+emerge --ask --update --newuse --tree --deep --with-bdeps=y @world
+echo "device-mapper" > /etc/portage/package.use/docker.use
+emerge -av app-emulation/docker
