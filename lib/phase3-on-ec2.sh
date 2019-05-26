@@ -4,7 +4,7 @@
 env-update
 . /etc/profile
 
-KERNEL_VERSION=4.19.4
+KERNEL_VERSION=4.19.7
 function step1 () {
   # install make.conf
   cd /root
@@ -55,8 +55,8 @@ eselect editor set /usr/bin/vi
 
 cat <<HERE >> /etc/portage/package.accept_keywords
 # for awscli
-=dev-python/s3transfer-0.1.13-r1 ~amd64
-=dev-python/awscli-1.15.10 ~amd64
+dev-python/s3transfer ~amd64
+dev-python/awscli ~amd64
 HERE
 
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
