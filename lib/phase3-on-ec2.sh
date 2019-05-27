@@ -60,8 +60,7 @@ eselect editor set /usr/bin/vi
 
 cat <<HERE >> /etc/portage/package.accept_keywords
 # for awscli
-#=dev-python/s3transfer-0.1.13-r1 ~amd64
-#=dev-python/awscli-1.16.72 ~amd64
+dev-python/botocore ~amd64
 dev-python/s3transfer ~amd64
 dev-python/awscli ~amd64
 dev-java/openjdk-bin ~amd64
