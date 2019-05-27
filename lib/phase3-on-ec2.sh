@@ -70,9 +70,12 @@ dev-java/openjdk-bin ~amd64
 #virtual/perl-* ~amd64
 HERE
 
+# separated because of problems with dependencies for awscli
+emerge -av awscli
+
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
 #echo "=app-emulation/cloud-init-18.4 ~amd64" >> /etc/portage/package.accept_keywords
-emerge -av app-emulation/cloud-init awscli app-crypt/gnupg
+emerge -av app-emulation/cloud-init app-crypt/gnupg
 
 # when we want to setup docker (in case python 36 only is in use
 #echo "dev-vcs/git -python" >> /etc/portage/package.use/git.use
