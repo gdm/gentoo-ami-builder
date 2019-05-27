@@ -4,7 +4,8 @@
 env-update
 . /etc/profile
 
-KERNEL_VERSION=4.20.0
+# TODO: add options for kernel / config files / installed software
+KERNEL_VERSION=5.1.4
 function step1 () {
   # install make.conf
   cd /root
@@ -31,10 +32,14 @@ function step1 () {
   emerge app-portage/gentoolkit
   emerge -a $EMERGE_OPTS --depclean
 
-  # newer kernel
+  # for newer kernel
   echo "=sys-kernel/gentoo-sources-${KERNEL_VERSION} ~amd64" >>  /etc/portage/package.accept_keywords
   emerge -av =sys-kernel/gentoo-sources-${KERNEL_VERSION}
-  cp /root/configs/config-4.20.0.txt  /usr/src/linux/.config
+  #echo "Try to configure new kernel !! "
+  #exit 0
+
+  cp /root/configs/kernel-config-5.1.4-kvm-noxen-noipv6-ena-nosystemd.txt /usr/src/linux/.config
+  # cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
 
   # old standard kernel
   # install config
@@ -55,20 +60,15 @@ eselect editor set /usr/bin/vi
 
 cat <<HERE >> /etc/portage/package.accept_keywords
 # for awscli
-<<<<<<< HEAD
-dev-python/s3transfer ~amd64
-dev-python/awscli ~amd64
-=======
 #=dev-python/s3transfer-0.1.13-r1 ~amd64
 #=dev-python/awscli-1.16.72 ~amd64
 dev-python/s3transfer ~amd64
 dev-python/awscli ~amd64
 dev-java/openjdk-bin ~amd64
 # for docker we need latest perl
-dev-lang/perl ~amd64
-perl-core/* ~amd64
-virtual/perl-* ~amd64
->>>>>>> 3447a5fa0a3911a4a72fe012b703ef6a18ac6626
+#dev-lang/perl ~amd64
+#perl-core/* ~amd64
+#virtual/perl-* ~amd64
 HERE
 
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
@@ -77,7 +77,7 @@ emerge -av app-emulation/cloud-init awscli app-crypt/gnupg
 
 # when we want to setup docker (in case python 36 only is in use
 #echo "dev-vcs/git -python" >> /etc/portage/package.use/git.use
-echo "app-emulation/containerd -btrfs" >> /etc/portage/package.use/containerd.use
+#echo "app-emulation/containerd -btrfs" >> /etc/portage/package.use/containerd.use
 # emerge -av app-emulation/docker (see todo.txt for resolving requirements in kernel)
 
 # change startup script (to run before urandom)
