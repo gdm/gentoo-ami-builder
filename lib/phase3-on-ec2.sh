@@ -4,7 +4,7 @@
 env-update
 . /etc/profile
 
-KERNEL_VERSION=4.19.7
+KERNEL_VERSION=4.20.0
 function step1 () {
   # install make.conf
   cd /root
@@ -34,7 +34,7 @@ function step1 () {
   # newer kernel
   echo "=sys-kernel/gentoo-sources-${KERNEL_VERSION} ~amd64" >>  /etc/portage/package.accept_keywords
   emerge -av =sys-kernel/gentoo-sources-${KERNEL_VERSION}
-  cp /root/configs/config-4.19.2.txt  /usr/src/linux/.config
+  cp /root/configs/config-4.20.0.txt  /usr/src/linux/.config
 
   # old standard kernel
   # install config
@@ -55,8 +55,20 @@ eselect editor set /usr/bin/vi
 
 cat <<HERE >> /etc/portage/package.accept_keywords
 # for awscli
+<<<<<<< HEAD
 dev-python/s3transfer ~amd64
 dev-python/awscli ~amd64
+=======
+#=dev-python/s3transfer-0.1.13-r1 ~amd64
+#=dev-python/awscli-1.16.72 ~amd64
+dev-python/s3transfer ~amd64
+dev-python/awscli ~amd64
+dev-java/openjdk-bin ~amd64
+# for docker we need latest perl
+dev-lang/perl ~amd64
+perl-core/* ~amd64
+virtual/perl-* ~amd64
+>>>>>>> 3447a5fa0a3911a4a72fe012b703ef6a18ac6626
 HERE
 
 # don't use this (new) version of cloud-init because it spoils /etc/locale.gen
@@ -77,7 +89,9 @@ rm portage-latest.tar.xz  stage3-amd64-*
 
 rc-update delete keymaps boot
 
-emerge -av dhcpcd
+emerge -av dhcpcd audit postgresql
+rc-update add auditd boot
+
 
 # no need if cloud-init exist
 # ln -s /etc/init.d/net.lo /etc/init.d/net.eth0
@@ -86,6 +100,7 @@ emerge -av dhcpcd
 # rc-update add net.ens5 default
 
 rc-update add sshd default
+rc-update add hostname default
 
 sed -i "s/^pool/#pool/" /etc/chrony/chrony.conf
 sed -i "3iserver 169.254.169.123 prefer iburst" /etc/chrony/chrony.conf
@@ -116,6 +131,42 @@ emerge -av oracle-jre-bin
 
 # install mail clients (for experiments)
 echo "mail-client/neomutt idn lmdb gpg_classic qdbm sasl smime_classic" > /etc/portage/package.use/mutt.use
+echo "sys-fs/squashfs-tools -xz -debug lz4 lzma lzo -static -xattr" > /etc/portage/package.use/squashfs-tools.use
 echo "mail-filter/procmail mbox" >> /etc/portage/package.use/mutt.use
-emerge -av neomutt procmail fetchmail
+emerge -av neomutt procmail fetchmail squashfs-tools
 
+# make portage.sq
+cd /usr/portage
+mksquashfs  . /portage.sq -e distfiles -comp lz4
+
+echo <<HERE
+about postgres:
+* If you need a global psqlrc-file, you can place it in:
+ *     /etc/postgresql-10/
+ * 
+ * Gentoo specific documentation:
+ * https://wiki.gentoo.org/wiki/PostgreSQL
+ * 
+ * Official documentation:
+ * https://www.postgresql.org/docs/10/static/index.html
+ * 
+ * The default location of the Unix-domain socket is:
+ *     /run/postgresql/
+ * 
+ * Before initializing the database, you may want to edit PG_INITDB_OPTS
+ * so that it contains your preferred locale in:
+ *     /etc/conf.d/postgresql-10
+ * 
+ * Then, execute the following command to setup the initial database
+ * environment:
+ *     emerge --config =dev-db/postgresql-10.6
+
+HERE
+
+# now rebuild
+
+# for rebuilding python 2.7
+chmod 1777 /dev/shm
+emerge --ask --update --newuse --tree --deep --with-bdeps=y @world
+echo "device-mapper" > /etc/portage/package.use/docker.use
+emerge -av app-emulation/docker

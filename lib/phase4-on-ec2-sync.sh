@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# issue: /etc/portage/make.profile -> ../../usr/portage/profiles/default/linux/amd64/17.0 - broken link
 
 # parted /dev/nvme2n1
 # mklabel msdos
@@ -10,6 +11,7 @@
 mkfs.ext4 /dev/nvme2n1p1 -L root
 mkdir /mnt/gentoo2
 mount -o noatime /dev/nvme2n1p1 /mnt/gentoo2
+
 
 
 cat > /root/exclude-rsync.txt <<EOF
