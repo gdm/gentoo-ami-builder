@@ -5,7 +5,7 @@ env-update
 . /etc/profile
 
 # TODO: add options for kernel / config files / installed software
-KERNEL_VERSION=5.1.4
+KERNEL_VERSION=5.1.5
 function step1 () {
   # install make.conf
   cd /root
@@ -38,7 +38,7 @@ function step1 () {
   #echo "Try to configure new kernel !! "
   #exit 0
 
-  cp /root/configs/kernel-config-5.1.4-kvm-noxen-noipv6-ena-nosystemd.txt /usr/src/linux/.config
+  cp /root/configs/kernel-config-5.1.5-kvm-noxen-noipv6-ena-nosystemd.txt /usr/src/linux/.config
   # cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
 
   # old standard kernel
@@ -54,7 +54,7 @@ make -j5 && make install && make modules_install
 # install packages
 #echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
-emerge -av vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree pciutils
+emerge -v vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree pciutils
 
 eselect editor set /usr/bin/vi
 
@@ -91,8 +91,10 @@ rm portage-latest.tar.xz  stage3-amd64-*
 
 rc-update delete keymaps boot
 
-emerge -av dhcpcd audit postgresql
+emerge -v dhcpcd audit
 rc-update add auditd boot
+
+emerge -a postgresql
 
 
 # no need if cloud-init exist
