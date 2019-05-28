@@ -172,5 +172,5 @@ HERE
 # for rebuilding python 2.7
 chmod 1777 /dev/shm
 emerge --ask --update --newuse --tree --deep --with-bdeps=y @world
-echo "device-mapper" > /etc/portage/package.use/docker.use
-emerge -av app-emulation/docker
+#echo "device-mapper" > /etc/portage/package.use/docker.use
+#emerge -av app-emulation/docker
