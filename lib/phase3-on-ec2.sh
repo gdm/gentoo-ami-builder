@@ -174,3 +174,8 @@ chmod 1777 /dev/shm
 emerge --ask --update --newuse --tree --deep --with-bdeps=y @world
 #echo "device-mapper" > /etc/portage/package.use/docker.use
 #emerge -av app-emulation/docker
+
+# support for pureftpd
+echo "net-ftp/pure-ftpd -pam paranoidmsg vchroot ssl" > /etc/portage/package.use/pure-ftpd.use
+emerge -av pure-ftpd
+
