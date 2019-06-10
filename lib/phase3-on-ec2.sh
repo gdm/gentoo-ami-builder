@@ -5,7 +5,7 @@ env-update
 . /etc/profile
 
 # TODO: add options for kernel / config files / installed software
-KERNEL_VERSION=5.1.4
+KERNEL_VERSION=5.1.8
 function step1 () {
   # install make.conf
   cd /root
@@ -38,7 +38,8 @@ function step1 () {
   #echo "Try to configure new kernel !! "
   #exit 0
 
-  cp /root/configs/kernel-config-5.1.4-kvm-noxen-noipv6-ena-nosystemd.txt /usr/src/linux/.config
+  cp /root/configs/config-${KERNEL_VERSION}.txt /usr/src/linux/.config
+  #cp /root/configs/kernel-config-5.1.4-kvm-noxen-noipv6-ena-nosystemd.txt /usr/src/linux/.config
   # cp /root/configs/config-4.14.78-no-ipv6-no-selinux-intel.txt  /usr/src/linux/.config
 
   # old standard kernel
@@ -49,7 +50,7 @@ function step1 () {
 
 step1
 cd /usr/src/linux
-make -j5 && make install && make modules_install
+make -j3 && make install && make modules_install
 
 # install packages
 #echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
@@ -91,9 +92,12 @@ rm portage-latest.tar.xz  stage3-amd64-*
 
 rc-update delete keymaps boot
 
-emerge -av dhcpcd audit postgresql
+emerge -a dhcpcd audit
 rc-update add auditd boot
+rc-update add dhcpcd boot
 
+echo "www-servers/nginx aio nginx_modules_http_gzip_static -nginx_modules_http_scgi -nginx_modules_http_split_clients pcre-jit vim-syntax" > /etc/portage/package.use/nginx.use
+emerg -a nginx
 
 # no need if cloud-init exist
 # ln -s /etc/init.d/net.lo /etc/init.d/net.eth0
@@ -129,7 +133,7 @@ echo ">=dev-java/oracle-jre-bin-1.8.0.192:1.8 Oracle-BCLA-JavaSE" >> /etc/portag
 echo "dev-java/oracle-jre-bin jce" >> /etc/portage/package.use/oracle-java.use
 echo "emerge -av oracle-jre-bin"
 # deliver binary
-emerge -av oracle-jre-bin
+#emerge -av oracle-jre-bin
 
 # install mail clients (for experiments)
 echo "mail-client/neomutt idn lmdb gpg_classic qdbm sasl smime_classic" > /etc/portage/package.use/mutt.use
@@ -141,6 +145,7 @@ emerge -av neomutt procmail fetchmail squashfs-tools
 cd /usr/portage
 mksquashfs  . /portage.sq -e distfiles -comp lz4
 
+#emerge -av postgresql
 echo <<HERE
 about postgres:
 * If you need a global psqlrc-file, you can place it in:
