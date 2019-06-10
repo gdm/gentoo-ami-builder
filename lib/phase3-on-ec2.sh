@@ -55,7 +55,7 @@ make -j3 && make install && make modules_install
 # install packages
 #echo "app-editors/vim minimal" > /etc/portage/package.use/vim.use
 echo "sys-boot/grub -fonts -themes" > /etc/portage/package.use/grub.use
-emerge -av vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree pciutils
+emerge -v vim grub syslog-ng logrotate vixie-cron monit mailx chrony openssh htop sudo tmux app-text/tree pciutils
 
 eselect editor set /usr/bin/vi
 
@@ -92,12 +92,15 @@ rm portage-latest.tar.xz  stage3-amd64-*
 
 rc-update delete keymaps boot
 
-emerge -a dhcpcd audit
+emerge -v dhcpcd audit
 rc-update add auditd boot
 rc-update add dhcpcd boot
 
 echo "www-servers/nginx aio nginx_modules_http_gzip_static -nginx_modules_http_scgi -nginx_modules_http_split_clients pcre-jit vim-syntax" > /etc/portage/package.use/nginx.use
-emerg -a nginx
+emerge -a nginx
+# (?) rc-update add nginx default
+
+#emerge -a postgresql
 
 # no need if cloud-init exist
 # ln -s /etc/init.d/net.lo /etc/init.d/net.eth0
@@ -175,5 +178,10 @@ HERE
 # for rebuilding python 2.7
 chmod 1777 /dev/shm
 emerge --ask --update --newuse --tree --deep --with-bdeps=y @world
-echo "device-mapper" > /etc/portage/package.use/docker.use
-emerge -av app-emulation/docker
+#echo "device-mapper" > /etc/portage/package.use/docker.use
+#emerge -av app-emulation/docker
+
+# support for pureftpd
+echo "net-ftp/pure-ftpd -pam paranoidmsg vchroot ssl" > /etc/portage/package.use/pure-ftpd.use
+emerge -av pure-ftpd
+
