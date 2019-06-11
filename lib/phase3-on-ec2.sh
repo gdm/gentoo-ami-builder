@@ -1,6 +1,8 @@
 # supposed to be run interactively after chroot /mnt/gentoo /bin/bash
 # some steps were taken from https://www.artembutusov.com/gentoo-on-aws/
 
+echo "TODO: setup dhcpcd for eni interfaces, enable ACPI, start dhcpcd and sshd"
+exit 0
 env-update
 . /etc/profile
 
